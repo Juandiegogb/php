@@ -27,8 +27,7 @@
         $name = $_POST['name'];
         $dni = $_POST['dni'];
         $sql = "INSERT INTO users(name,dni) VALUES ('$name' , $dni)";
-        $db->exec($sql);
-
+        $result  = $db->exec($sql);
         header('location: index.php');
     }
     ?>
