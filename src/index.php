@@ -21,17 +21,23 @@
                 <input type="text" placeholder="Search songs">
             </div>
             <div class="genre_filter">
-                <select name="" id="">
+                <select name="genre" id="genre">
                     <option value="" hidden>Select genre</option>
-                    <option value="">Salsa</option>
-                    <option value="">Vallenato</option>
+                    <?php
+                    include('php/dbconfig.php');
+                    $query = 'SELECT DISTINCT genre FROM songs';
+                    $result = $db->query($query);
+                    while ($row = $result->fetchArray()) {
+                        echo '<option value="' . htmlspecialchars($row['genre']) . '">' . htmlspecialchars($row['genre']) . '</option>';
+                    }
+                    ?>
                 </select>
             </div>
         </div>
         <i id="login" class="fa-solid fa-right-to-bracket" title="Login"></i>
     </nav>
 
-    <main>
+    <main id="songs">
 
         <?php
 
@@ -58,6 +64,17 @@
         <p>Develop by José Mateus & Juan Diego Garzón 2025</p>
     </footer>
 
+    <script>
+        document.getElementById('genre').addEventListener('change', function() {
+            let genre = this.value;
+            fetch('php/get_songs.php?genre=' + encodeURIComponent(genre))
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('songs').innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
 
 </body>
 
