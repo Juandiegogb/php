@@ -44,21 +44,33 @@
         try {
             include('php/dbconfig.php');
             $stmt = $db->query("SELECT * FROM songs");
-            echo '<div class="song">';
+
             while ($row = $stmt->fetchArray()) {
+                $title = htmlspecialchars($row['name']);
+                $path = htmlspecialchars($row['path']);
+
+                echo '<div class="song" onclick="playSong(\'' . $path . '\', \'' . $title . '\')">';
                 echo '<div class="details">';
                 echo '<h3>' . htmlspecialchars($row['name']) . '</h3>';
                 echo '<p>' . htmlspecialchars($row['artist']) . '</p>';
                 echo '<p>' . htmlspecialchars($row['album']) . '</p>';
                 echo '</div>';
+                echo '</div>';
             }
-            echo '</div>';
         } catch (PDOException $e) {
             echo "Error en la conexión: " . $e->getMessage();
         }
         ?>
 
     </main>
+    <div id="audio_player">
+        <p id="song_title">Select a song to play</p>
+        <audio id="player" controls>
+            <source id="audio_source" src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
 
     <footer>
         <p>Develop by José Mateus & Juan Diego Garzón 2025</p>
@@ -74,6 +86,17 @@
                 })
                 .catch(error => console.error('Error:', error));
         });
+
+        function playSong(path, title) {
+            let player = document.getElementById('player');
+            let source = document.getElementById('audio_source');
+            let songTitle = document.getElementById('song_title');
+
+            source.src = path;
+            player.load();
+            player.play();
+            songTitle.textContent = title;
+        }
     </script>
 
 </body>
